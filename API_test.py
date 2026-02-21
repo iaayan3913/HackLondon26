@@ -11,7 +11,7 @@ prompt = input("Enter something you would like to find out: ")
 try:
     # 2. Create a message
     message = client.messages.create(
-        model="claude-opus-4-6",
+        model="claude-opus-4-6",   # change this to "claude-sonnet-4-6" or "claude-haiku-4-5-20251001" for different models (these will be cheaper)
         max_tokens=1024,
         messages=[
             {"role": "user", "content": prompt}
@@ -25,4 +25,5 @@ try:
     print("Success! Your API key is working.")
 
 except Exception as e:
+
     print(f"Error: {e}")
