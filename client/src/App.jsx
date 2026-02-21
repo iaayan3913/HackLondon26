@@ -3,46 +3,35 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import axios from 'axios'
+import Flashcards from './Flashcards'   // ← this was missing
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [apiMessage, setApiMessage] = useState('Loading backend data...')
+  const [page, setPage] = useState('home')
+  const [apiMessage, setApiMessage] = useState('Loading...')
 
   useEffect(() => {
-    // Fetch data from FastAPI backend
     axios.get('http://localhost:8000/api/test')
-      .then(response => {
-        setApiMessage(response.data.message)
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error)
-        setApiMessage('Failed to connect to backend')
-      })
+      .then(res => setApiMessage(res.data.message))
+      .catch(() => setApiMessage('Failed to connect'))
   }, [])
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React + FastAPI</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <div style={{ marginTop: '20px', padding: '10px', background: '#f9f9f9', borderRadius: '8px', color: '#333' }}>
-          <h3>Backend Connection Status</h3>
-          <p>Message: <strong>{apiMessage}</strong></p>
+      {/* Simple nav to switch pages */}
+      <nav style={{ display: 'flex', gap: 12, padding: 16 }}>
+        <button onClick={() => setPage('home')}>Home</button>
+        <button onClick={() => setPage('flashcards')}>Flashcards</button>
+      </nav>
+
+      {/* Render the right page */}
+      {page === 'home' && (
+        <div>
+          <h1>Home</h1>
+          <p>{apiMessage}</p>
         </div>
-      </div>
-      <p className="read-the-docs">
-        Edit <code>src/App.jsx</code> and save to test HMR
-      </p>
+      )}
+
+      {page === 'flashcards' && <Flashcards />}
     </>
   )
 }
