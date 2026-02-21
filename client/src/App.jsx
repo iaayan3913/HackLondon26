@@ -473,108 +473,6 @@ function App() {
 
               <section className="section">
                 <div className="section-header">
-                  <h2 className="section-title">My Files & Folders</h2>
-                  <div className="files-actions">
-                    <button className="view-mode-button" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        {viewMode === 'grid' ? (
-                          <>
-                            <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
-                            <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
-                          </>
-                        ) : (
-                          <>
-                            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-                            <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
-                          </>
-                        )}
-                      </svg>
-                    </button>
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
-                      <option value="name">Sort by Name</option>
-                      <option value="modified">Sort by Recently Modified</option>
-                      <option value="size">Sort by Size</option>
-                    </select>
-                    <button className="action-button" onClick={() => setShowUploadModal(true)}>Upload Files</button>
-                    <button className="action-button primary" onClick={() => setShowNewFolderModal(true)}>New Folder</button>
-                  </div>
-                </div>
-
-                {viewMode === 'grid' ? (
-                  <div className="files-grid">
-                    {folders.map(folder => (
-                      <div key={folder.id} className="file-card folder-card">
-                        <svg className="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                        </svg>
-                        <h3 className="file-name">{folder.name}</h3>
-                        <p className="file-meta">{folder.items} items &bull; {folder.modified}</p>
-                        <button className="file-menu">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
-                        </button>
-                      </div>
-                    ))}
-                    {files.map(file => (
-                      <div key={file.id} className="file-card">
-                        <div className="file-icon-box" style={{ backgroundColor: file.color + '20', color: file.color }}>
-                          <span className="file-type">{file.type}</span>
-                        </div>
-                        <h3 className="file-name">{file.name}</h3>
-                        <p className="file-meta">{file.size} &bull; {file.modified}</p>
-                        <button className="file-menu">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="files-list">
-                    <div className="list-header">
-                      <div className="col-name">Name</div>
-                      <div className="col-size">Size</div>
-                      <div className="col-modified">Modified</div>
-                      <div className="col-actions">Actions</div>
-                    </div>
-                    {folders.map(folder => (
-                      <div key={folder.id} className="list-row">
-                        <div className="col-name">
-                          <svg className="list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                          </svg>
-                          <span>{folder.name}</span>
-                        </div>
-                        <div className="col-size">-</div>
-                        <div className="col-modified">{folder.modified}</div>
-                        <div className="col-actions">
-                          <button className="file-menu">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    {files.map(file => (
-                      <div key={file.id} className="list-row">
-                        <div className="col-name">
-                          <div className="list-icon-box" style={{ backgroundColor: file.color + '20', color: file.color }}>
-                            {file.type}
-                          </div>
-                          <span>{file.name}</span>
-                        </div>
-                        <div className="col-size">{file.size}</div>
-                        <div className="col-modified">{file.modified}</div>
-                        <div className="col-actions">
-                          <button className="file-menu">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-
-              <section className="section">
-                <div className="section-header">
                   <h2 className="section-title">Recent Flashcard Decks</h2>
                   <button className="view-all-link" onClick={() => setActiveNav('flashcards')}>View all decks →</button>
                 </div>
@@ -624,7 +522,163 @@ function App() {
                 </div>
               </section>
 
-              {showUploadModal && (
+              <section className="section">
+                <div className="files-section-header">
+                  <div>
+                    <h2 className="section-title">My Files</h2>
+                  </div>
+                  <div className="files-actions">
+                    <button className="action-button" onClick={() => setShowNewFolderModal(true)}>
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6">
+                        <path d="M7 13H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2" />
+                        <path d="M9 3h8v8H9z" />
+                      </svg>
+                      New Folder
+                    </button>
+                    <button className="action-button primary" onClick={() => setShowUploadModal(true)}>
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6">
+                        <path d="M13 7H7M10 4V10M6 14H14M7 17H13" />
+                      </svg>
+                      Upload Files
+                    </button>
+                  </div>
+                </div>
+
+                <div className="files-top-bar">
+                  <div className="search-bar-files">
+                    <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" placeholder="Search files and folders..." />
+                  </div>
+                  <div className="files-controls">
+                    <button className="view-mode-button" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')} title="Toggle view">
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6">
+                        {viewMode === 'grid' ? (
+                          <>
+                            <rect x="3" y="3" width="3.5" height="3.5" />
+                            <rect x="8.5" y="3" width="3.5" height="3.5" />
+                            <rect x="14" y="3" width="3.5" height="3.5" />
+                            <rect x="3" y="8.5" width="3.5" height="3.5" />
+                            <rect x="8.5" y="8.5" width="3.5" height="3.5" />
+                            <rect x="14" y="8.5" width="3.5" height="3.5" />
+                          </>
+                        ) : (
+                          <>
+                            <line x1="3" y1="4" x2="16" y2="4" />
+                            <line x1="3" y1="9" x2="16" y2="9" />
+                            <line x1="3" y1="14" x2="16" y2="14" />
+                          </>
+                        )}
+                      </svg>
+                    </button>
+                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
+                      <option value="name">Sort by: Name</option>
+                      <option value="modified">Sort by: Recently Modified</option>
+                      <option value="size">Sort by: Size</option>
+                    </select>
+                  </div>
+                </div>
+
+                {viewMode === 'grid' ? (
+                  <div className="files-grid">
+                    {folders.map(folder => (
+                      <div key={folder.id} className="file-card folder-card">
+                        <div className="file-card-top">
+                          <svg className="folder-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 5a2 2 0 012-2h6l2 2h6a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                          </svg>
+                        </div>
+                        <h3 className="file-name">{folder.name}</h3>
+                        <p className="file-meta">{folder.items} items • {folder.modified}</p>
+                      </div>
+                    ))}
+                    {files.map(file => (
+                      <div key={file.id} className="file-card">
+                        <div className="file-badge" style={{ backgroundColor: file.color }}>
+                          <span className="file-type-badge">{file.type}</span>
+                        </div>
+                        <h3 className="file-name">{file.name}</h3>
+                        <p className="file-meta">{file.size} • {file.modified}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="files-list">
+                    <div className="list-header">
+                      <div className="col-name">Name</div>
+                      <div className="col-size">Size</div>
+                      <div className="col-modified">Modified</div>
+                    </div>
+                    {folders.map(folder => (
+                      <div key={folder.id} className="list-row">
+                        <div className="col-name">
+                          <svg className="list-folder-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 5a2 2 0 012-2h6l2 2h6a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                          </svg>
+                          <span>{folder.name}</span>
+                        </div>
+                        <div className="col-size">-</div>
+                        <div className="col-modified">{folder.modified}</div>
+                      </div>
+                    ))}
+                    {files.map(file => (
+                      <div key={file.id} className="list-row">
+                        <div className="col-name">
+                          <div className="list-file-badge" style={{ backgroundColor: file.color }}>
+                            {file.type}
+                          </div>
+                          <span>{file.name}</span>
+                        </div>
+                        <div className="col-size">{file.size}</div>
+                        <div className="col-modified">{file.modified}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+                  <div className="deck-card create-deck-card" onClick={() => setActiveNav('flashcards')}>
+                    <svg className="create-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <div className="create-text">Create New Deck</div>
+                  </div>
+                  <div className="deck-card">
+                    <div className="deck-header">
+                      <span className="deck-badge badge-medicine">Medicine</span>
+                      <button className="deck-menu-button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg></button>
+                    </div>
+                    <h3 className="deck-title">Human Anatomy II</h3>
+                    <div className="deck-info"><span>128 cards</span><span className="deck-time">Last practiced 2h ago</span></div>
+                    <div className="progress-container">
+                      <div className="progress-bar"><div className="progress-fill progress-green" style={{ width: '65%' }}></div></div>
+                      <span className="progress-label">65%</span>
+                    </div>
+                  </div>
+                  <div className="deck-card">
+                    <div className="deck-header">
+                      <span className="deck-badge badge-biology">Biology</span>
+                      <button className="deck-menu-button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg></button>
+                    </div>
+                    <h3 className="deck-title">Microbiology Basic</h3>
+                    <div className="deck-info"><span>54 cards</span><span className="deck-time">Last practiced 5h ago</span></div>
+                    <div className="progress-container">
+                      <div className="progress-bar"><div className="progress-fill progress-blue" style={{ width: '30%' }}></div></div>
+                      <span className="progress-label">30%</span>
+                    </div>
+                  </div>
+                  <div className="deck-card">
+                    <div className="deck-header">
+                      <span className="deck-badge badge-chemistry">Chemistry</span>
+                      <button className="deck-menu-button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg></button>
+                    </div>
+                    <h3 className="deck-title">Organic Compounds</h3>
+                    <div className="deck-info"><span>89 cards</span><span className="deck-time">Last practiced 1d ago</span></div>
+                    <div className="progress-container">
+                      <div className="progress-bar"><div className="progress-fill progress-green" style={{ width: '88%' }}></div></div>
+                      <span className="progress-label">88%</span>
+                    </div>
+                  </div>
                 <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
                   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                     <div className="modal-header">

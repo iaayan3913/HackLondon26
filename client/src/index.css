@@ -45,3 +45,23 @@ body {
 .spinner {
   animation: spin 1s linear infinite;
 }
+
+/* Transcription History Table Fix */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table tr {
+  vertical-align: middle;
+}
+
+table td {
+  vertical-align: middle;
+}
+
+table td span {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
