@@ -34,3 +34,8 @@ dist-ssr
 venv/
 .venv/
 env/
+
+
+# Secrets / credentials
+keys/*.json
+.env
