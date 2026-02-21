@@ -436,11 +436,9 @@ function Spinner() {
 
 const s = {
   page: {
-    padding: '32px 36px',
-    maxWidth: 1100,
+    padding: '20px',
     fontFamily: "'Plus Jakarta Sans', 'Segoe UI', sans-serif",
-    minHeight: '100vh',
-    background: C.bg,
+    minHeight: '100%',
   },
   fadeIn: {
     animation: 'fadeUp 0.3s ease both',

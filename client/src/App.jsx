@@ -473,6 +473,108 @@ function App() {
 
               <section className="section">
                 <div className="section-header">
+                  <h2 className="section-title">My Files & Folders</h2>
+                  <div className="files-actions">
+                    <button className="view-mode-button" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        {viewMode === 'grid' ? (
+                          <>
+                            <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+                            <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+                          </>
+                        ) : (
+                          <>
+                            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+                          </>
+                        )}
+                      </svg>
+                    </button>
+                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
+                      <option value="name">Sort by Name</option>
+                      <option value="modified">Sort by Recently Modified</option>
+                      <option value="size">Sort by Size</option>
+                    </select>
+                    <button className="action-button" onClick={() => setShowUploadModal(true)}>Upload Files</button>
+                    <button className="action-button primary" onClick={() => setShowNewFolderModal(true)}>New Folder</button>
+                  </div>
+                </div>
+
+                {viewMode === 'grid' ? (
+                  <div className="files-grid">
+                    {folders.map(folder => (
+                      <div key={folder.id} className="file-card folder-card">
+                        <svg className="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                        </svg>
+                        <h3 className="file-name">{folder.name}</h3>
+                        <p className="file-meta">{folder.items} items &bull; {folder.modified}</p>
+                        <button className="file-menu">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
+                        </button>
+                      </div>
+                    ))}
+                    {files.map(file => (
+                      <div key={file.id} className="file-card">
+                        <div className="file-icon-box" style={{ backgroundColor: file.color + '20', color: file.color }}>
+                          <span className="file-type">{file.type}</span>
+                        </div>
+                        <h3 className="file-name">{file.name}</h3>
+                        <p className="file-meta">{file.size} &bull; {file.modified}</p>
+                        <button className="file-menu">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="files-list">
+                    <div className="list-header">
+                      <div className="col-name">Name</div>
+                      <div className="col-size">Size</div>
+                      <div className="col-modified">Modified</div>
+                      <div className="col-actions">Actions</div>
+                    </div>
+                    {folders.map(folder => (
+                      <div key={folder.id} className="list-row">
+                        <div className="col-name">
+                          <svg className="list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                          </svg>
+                          <span>{folder.name}</span>
+                        </div>
+                        <div className="col-size">-</div>
+                        <div className="col-modified">{folder.modified}</div>
+                        <div className="col-actions">
+                          <button className="file-menu">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {files.map(file => (
+                      <div key={file.id} className="list-row">
+                        <div className="col-name">
+                          <div className="list-icon-box" style={{ backgroundColor: file.color + '20', color: file.color }}>
+                            {file.type}
+                          </div>
+                          <span>{file.name}</span>
+                        </div>
+                        <div className="col-size">{file.size}</div>
+                        <div className="col-modified">{file.modified}</div>
+                        <div className="col-actions">
+                          <button className="file-menu">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              <section className="section">
+                <div className="section-header">
                   <h2 className="section-title">Recent Flashcard Decks</h2>
                   <button className="view-all-link" onClick={() => setActiveNav('flashcards')}>View all decks →</button>
                 </div>
@@ -572,7 +674,87 @@ function App() {
       )}
 
       {/* ===== FLASHCARDS PAGE ===== */}
-      {activeNav === 'flashcards' && <Flashcards />}
+      {activeNav === 'flashcards' && (
+        <>
+          <aside className="sidebar">
+            <div className="sidebar-header">
+              <div className="logo">
+                <svg className="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                <div className="logo-text">
+                  <div className="logo-title">StudyPro</div>
+                  <div className="logo-subtitle">Academic Suite</div>
+                </div>
+              </div>
+            </div>
+
+            <nav className="nav-menu">
+              <button className={`nav-item ${activeNav === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveNav('dashboard')}>
+                <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+                </svg>
+                Dashboard
+              </button>
+              <button className={`nav-item ${activeNav === 'flashcards' ? 'active' : ''}`} onClick={() => setActiveNav('flashcards')}>
+                <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M7 3h10c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2z" />
+                  <line x1="9" y1="9" x2="15" y2="9" /><line x1="9" y1="13" x2="15" y2="13" />
+                </svg>
+                Flashcards
+              </button>
+              <button className={`nav-item ${activeNav === 'quizzes' ? 'active' : ''}`} onClick={() => setActiveNav('quizzes')}>
+                <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Quizzes
+              </button>
+              <button className={`nav-item ${activeNav === 'transcription' ? 'active' : ''}`} onClick={() => setActiveNav('transcription')}>
+                <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" />
+                </svg>
+                Transcription
+              </button>
+              <button className={`nav-item ${activeNav === 'focus' ? 'active' : ''}`} onClick={() => setActiveNav('focus')}>
+                <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Focus Zone
+              </button>
+            </nav>
+          </aside>
+
+          <div className="main-container" style={{ marginLeft: '230px', width: 'calc(100% - 230px)' }}>
+            <header className="top-navbar">
+              <div className="search-bar">
+                <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+                </svg>
+                <input type="text" placeholder="Search for flashcards, notes, or files..." />
+              </div>
+              <div className="navbar-actions">
+                <div className="user-profile">
+                  <div className="user-info">
+                    <div className="user-name">Alex Johnson</div>
+                  </div>
+                  <div className="user-avatar">AJ</div>
+                </div>
+              </div>
+            </header>
+
+            <main className="content-area">
+              <Flashcards />
+            </main>
+          </div>
+        </>
+      )}
 
       {/* ===== PLACEHOLDER PAGES ===== */}
       {activeNav === 'quizzes' && (
