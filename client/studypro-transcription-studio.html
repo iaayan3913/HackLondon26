@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyPro Transcription Studio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body { font-family: 'Plus Jakarta Sans', sans-serif; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .spinner { animation: spin 1s linear infinite; }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen bg-slate-50">
+    <nav class="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-slate-200 flex items-center px-6 gap-4">
+      <div class="w-60 flex-shrink-0"></div>
+
+      <div class="flex-1 max-w-xl mx-auto relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+          <path d="M20 20L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+        <input
+          type="text"
+          placeholder="Search recordings, transcripts, or topics..."
+          class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg" aria-label="Notifications">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 17H5L6.4 15.6C6.775 15.225 7 14.7163 7 14.1858V10C7 7.23858 9.23858 5 12 5C14.7614 5 17 7.23858 17 10V14.1858C17 14.7163 17.225 15.225 17.6 15.6L19 17H15Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+            <path d="M10.5 19C10.8 19.6 11.4 20 12 20C12.6 20 13.2 19.6 13.5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          </svg>
+        </button>
+        <button class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg" aria-label="Settings">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" stroke="currentColor" stroke-width="1.8"></path>
+            <path d="M19.4 15A1.7 1.7 0 0 0 20.1 16.9L20.2 17C20.6 17.4 20.6 18.1 20.2 18.5L18.5 20.2C18.1 20.6 17.4 20.6 17 20.2L16.9 20.1A1.7 1.7 0 0 0 15 19.4C14.56 19.59 14.25 19.99 14.2 20.47V20.8C14.2 21.35 13.75 21.8 13.2 21.8H10.8C10.25 21.8 9.8 21.35 9.8 20.8V20.6C9.77 20.09 9.45 19.63 9 19.4A1.7 1.7 0 0 0 7.1 20.1L7 20.2C6.6 20.6 5.9 20.6 5.5 20.2L3.8 18.5C3.4 18.1 3.4 17.4 3.8 17L3.9 16.9A1.7 1.7 0 0 0 4.6 15C4.41 14.56 4.01 14.25 3.53 14.2H3.2C2.65 14.2 2.2 13.75 2.2 13.2V10.8C2.2 10.25 2.65 9.8 3.2 9.8H3.4C3.91 9.77 4.37 9.45 4.6 9A1.7 1.7 0 0 0 3.9 7.1L3.8 7C3.4 6.6 3.4 5.9 3.8 5.5L5.5 3.8C5.9 3.4 6.6 3.4 7 3.8L7.1 3.9A1.7 1.7 0 0 0 9 4.6C9.44 4.41 9.75 4.01 9.8 3.53V3.2C9.8 2.65 10.25 2.2 10.8 2.2H13.2C13.75 2.2 14.2 2.65 14.2 3.2V3.4C14.23 3.91 14.55 4.37 15 4.6A1.7 1.7 0 0 0 16.9 3.9L17 3.8C17.4 3.4 18.1 3.4 18.5 3.8L20.2 5.5C20.6 5.9 20.6 6.6 20.2 7L20.1 7.1A1.7 1.7 0 0 0 19.4 9C19.59 9.44 19.99 9.75 20.47 9.8H20.8C21.35 9.8 21.8 10.25 21.8 10.8V13.2C21.8 13.75 21.35 14.2 20.8 14.2H20.6C20.09 14.23 19.63 14.55 19.4 15Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+        <div class="flex items-center gap-2 ml-2">
+          <div class="w-9 h-9 rounded-full bg-slate-300 flex items-center justify-center text-sm font-bold text-slate-600">AJ</div>
+          <div>
+            <p class="text-sm font-semibold text-slate-800">Alex Johnson</p>
+            <p class="text-xs text-slate-500">Medical Student</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <aside class="fixed left-0 top-16 h-[calc(100vh-4rem)] w-60 bg-white border-r border-slate-200 flex flex-col p-4 z-40">
+      <div class="flex items-center gap-3 px-3 py-2 mb-6">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 4H16C17.1 4 18 4.9 18 6V19L15 17.5L12 19L9 17.5L6 19V6C6 4.9 6.9 4 8 4Z" fill="currentColor"></path>
+            <path d="M9 8H15" stroke="#2563EB" stroke-width="1.6" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-base text-slate-800">StudyPro</span>
+          <span class="text-xs text-slate-500">Academic Suite</span>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-colors mb-1">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.8"></rect>
+          <rect x="12" y="2" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.8"></rect>
+          <rect x="2" y="12" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.8"></rect>
+          <rect x="12" y="12" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.8"></rect>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-colors mb-1">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6.5L10 3L16 6.5L10 10L4 6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+          <path d="M4 10.5L10 7L16 10.5L10 14L4 10.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+          <path d="M4 14.5L10 11L16 14.5L10 18L4 14.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+        </svg>
+        <span>Flashcards</span>
+      </a>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-colors mb-1">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="2.5" width="12" height="15" rx="2" stroke="currentColor" stroke-width="1.8"></rect>
+          <path d="M7 6H13M7 9.5H13M7 13H11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          <path d="M8 2.5H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+        </svg>
+        <span>Quizzes</span>
+      </a>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 mb-1">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 3C11.7 3 13 4.3 13 6V9.8C13 11.5 11.7 12.8 10 12.8C8.3 12.8 7 11.5 7 9.8V6C7 4.3 8.3 3 10 3Z" stroke="currentColor" stroke-width="1.8"></path>
+          <path d="M4.5 9.8C4.5 12.7 6.9 15.1 9.8 15.1H10.2C13.1 15.1 15.5 12.7 15.5 9.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          <path d="M10 15.1V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+        </svg>
+        <span>Transcription</span>
+      </a>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-colors mb-1">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.8"></circle>
+          <path d="M10 6V10L12.8 11.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Focus Zone</span>
+      </a>
+    </aside>
+
+    <aside class="fixed right-0 top-16 h-[calc(100vh-4rem)] w-[300px] bg-slate-50 border-l border-slate-200 p-5 overflow-y-auto z-40 flex flex-col gap-4">
+      <div class="bg-[#0F172A] rounded-xl p-6 text-white">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-yellow-400" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 2.5C7.24 2.5 5 4.74 5 7.5C5 9.16 5.81 10.63 7.05 11.55C7.66 12 8 12.72 8 13.5V14H12V13.5C12 12.72 12.34 12 12.95 11.55C14.19 10.63 15 9.16 15 7.5C15 4.74 12.76 2.5 10 2.5Z" fill="currentColor"></path>
+            <path d="M8 16H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            <path d="M8.5 18H11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          </svg>
+          <h3 class="text-base font-bold">Quick Tips</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-4 leading-relaxed">Improve transcript accuracy and speed with these recommended studio workflows.</p>
+
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 flex-shrink-0 mt-0.5">01</div>
+          <p class="text-xs text-slate-300 leading-relaxed"><span class="font-bold text-white">Use clear audio:</span> Upload files with minimal background noise for best recognition quality.</p>
+        </div>
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 flex-shrink-0 mt-0.5">02</div>
+          <p class="text-xs text-slate-300 leading-relaxed"><span class="font-bold text-white">Label speakers:</span> Add speaker tags during review to organize notes for faster studying.</p>
+        </div>
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 flex-shrink-0 mt-0.5">03</div>
+          <p class="text-xs text-slate-300 leading-relaxed"><span class="font-bold text-white">Export smartly:</span> Download final transcripts and convert key points into flashcards.</p>
+        </div>
+
+        <button class="w-full mt-2 py-3 bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold rounded-lg transition-colors">View Full Guide</button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <h3 class="text-sm font-bold text-slate-900 mb-4">Studio Stats</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1">
+            <span class="text-xs text-slate-500">Hours Processed</span>
+            <span class="text-2xl font-bold text-blue-600">124.5</span>
+          </div>
+          <div class="flex flex-col gap-1">
+            <span class="text-xs text-slate-500">Total Files</span>
+            <span class="text-2xl font-bold text-slate-900">42</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="ml-60 mr-[300px] mt-16 p-8 min-h-[calc(100vh-4rem)] h-[calc(100vh-4rem)] overflow-y-auto">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Transcription Studio</h1>
+          <p class="text-sm text-slate-500 mt-1">Upload lectures, record sessions, and manage transcript history in one place.</p>
+        </div>
+        <button class="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-700 transition-colors">
+          <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            <circle cx="14.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.6"></circle>
+            <path d="M8 10H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            <circle cx="5.5" cy="10" r="1.5" stroke="currentColor" stroke-width="1.6"></circle>
+            <path d="M3 15H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            <circle cx="14.5" cy="15" r="1.5" stroke="currentColor" stroke-width="1.6"></circle>
+          </svg>
+          <span>Filter View</span>
+        </button>
+      </div>
+
+      <section class="bg-white rounded-xl border border-slate-200 shadow-sm p-7 flex items-center justify-between mb-6">
+        <div class="flex flex-col gap-4">
+          <h2 class="text-lg font-bold text-slate-900">New Recording</h2>
+          <p class="text-sm text-slate-500 max-w-sm">Start a live session or upload an existing file to generate accurate transcripts for study and revision.</p>
+          <div class="flex flex-col gap-3 mt-2">
+            <button class="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors w-fit">
+              <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 14.5H14C16.2091 14.5 18 12.7091 18 10.5C18 8.53434 16.5834 6.89952 14.7147 6.56089C14.0733 4.51525 12.1662 3 9.9 3C7.30928 3 5.2 5.10928 5.2 7.7C3.93877 8.1194 3 9.30957 3 10.7C3 12.4397 4.4103 13.85 6.15 13.85H6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M10 9V16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                <path d="M7.5 11.5L10 9L12.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Upload Audio/Video</span>
+            </button>
+            <button class="flex items-center gap-2 px-5 py-3 border-2 border-slate-200 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors w-fit text-slate-800">
+              <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+              <span>Start Live Session</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="w-36 h-28 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg class="w-8 h-8 text-slate-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 17V7.5C9 6.12 10.12 5 11.5 5C12.88 5 14 6.12 14 7.5V16.3C14 17.79 12.79 19 11.3 19C9.81 19 8.6 17.79 8.6 16.3V8.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            <path d="M16 10L20 8V16L16 14V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Transcription History</h2>
+          <a href="#" class="text-sm text-blue-600 hover:underline font-medium">See all activity</a>
+        </div>
+
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-slate-100">
+              <th class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wide pb-3 px-3">File Name</th>
+              <th class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wide pb-3 px-3">Status</th>
+              <th class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wide pb-3 px-3">Duration</th>
+              <th class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wide pb-3 px-3">Date</th>
+              <th class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wide pb-3 px-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+              <td class="py-4 px-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-md bg-blue-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-600" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 2.8H11.5L15 6.3V16.2C15 16.97 14.37 17.6 13.6 17.6H6.4C5.63 17.6 5 16.97 5 16.2V4.2C5 3.43 5.63 2.8 6.4 2.8H6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                      <path d="M11.5 2.8V6.3H15" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-slate-800">Biology_Lecture_Week4.mp3</span>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">Completed</span>
+              </td>
+              <td class="py-4 px-3"><span class="text-sm text-slate-600">45:12</span></td>
+              <td class="py-4 px-3"><span class="text-sm text-slate-600">Feb 20, 2026</span></td>
+              <td class="py-4 px-3">
+                <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md" aria-label="More actions">
+                  <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="4" cy="10" r="1.5" fill="currentColor"></circle>
+                    <circle cx="10" cy="10" r="1.5" fill="currentColor"></circle>
+                    <circle cx="16" cy="10" r="1.5" fill="currentColor"></circle>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+              <td class="py-4 px-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-md bg-violet-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-violet-600" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M10 3.5C11.3 3.5 12.35 4.55 12.35 5.85V9.45C12.35 10.75 11.3 11.8 10 11.8C8.7 11.8 7.65 10.75 7.65 9.45V5.85C7.65 4.55 8.7 3.5 10 3.5Z" stroke="currentColor" stroke-width="1.7"></path>
+                      <path d="M5.4 9.6C5.4 12.03 7.37 14 9.8 14H10.2C12.63 14 14.6 12.03 14.6 9.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+                      <path d="M10 14V16.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-slate-800">Chemistry_Lab_Notes.wav</span>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="flex items-center gap-1.5 text-sm text-blue-600 font-medium">
+                  <svg class="w-4 h-4 spinner" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-opacity="0.25" stroke-width="2"></circle>
+                    <path d="M17 10C17 6.134 13.866 3 10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                  </svg>
+                  Transcribing...
+                </span>
+              </td>
+              <td class="py-4 px-3"><span class="text-sm text-slate-600">18:47</span></td>
+              <td class="py-4 px-3"><span class="text-sm text-slate-600">Feb 21, 2026</span></td>
+              <td class="py-4 px-3">
+                <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md" aria-label="More actions">
+                  <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="4" cy="10" r="1.5" fill="currentColor"></circle>
+                    <circle cx="10" cy="10" r="1.5" fill="currentColor"></circle>
+                    <circle cx="16" cy="10" r="1.5" fill="currentColor"></circle>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+              <td class="py-4 px-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-md bg-pink-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-pink-600" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="4" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.7"></rect>
+                      <path d="M8 7.5L13 10L8 12.5V7.5Z" fill="currentColor"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-slate-800">Physics_Seminar.mp4</span>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-600">Error</span>
+              </td>
+              <td class="py-4 px-3"><span class="text-sm text-slate-600">52:03</span></td>
+              <td class="py-4 px-3"><span class="text-sm text-slate-600">Feb 19, 2026</span></td>
+              <td class="py-4 px-3">
+                <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md" aria-label="More actions">
+                  <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="4" cy="10" r="1.5" fill="currentColor"></circle>
+                    <circle cx="10" cy="10" r="1.5" fill="currentColor"></circle>
+                    <circle cx="16" cy="10" r="1.5" fill="currentColor"></circle>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>
