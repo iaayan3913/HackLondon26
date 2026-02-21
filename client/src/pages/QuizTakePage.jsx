@@ -265,7 +265,7 @@ export default function QuizTakePage() {
                 onClick={() => saveAnswer(currentQuestion.id, openDraft)}
                 type="button"
               >
-                {saving ? 'Saving...' : 'Save Answer'}
+                {saving ? 'Submitting...' : 'Save and Submit Answer'}
               </button>
             </div>
             {speech.error ? <p className="text-sm text-red-600">Speech error: {speech.error}</p> : null}

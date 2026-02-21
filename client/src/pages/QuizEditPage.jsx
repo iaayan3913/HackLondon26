@@ -148,8 +148,10 @@ export default function QuizEditPage() {
     [questions.length],
   )
 
-  const loadQuiz = useCallback(async () => {
-    setLoading(true)
+  const loadQuiz = useCallback(async ({ silent = false } = {}) => {
+    if (!silent) {
+      setLoading(true)
+    }
     setError('')
 
     try {
@@ -221,11 +223,15 @@ export default function QuizEditPage() {
     formData.append('difficulty', difficulty)
 
     try {
-      const response = await api.post(`/api/quizzes/${id}/generate`, formData)
+      const response = await api.post(`/api/quizzes/${id}/generate`, formData, { timeout: 120000 })
       setQuestions(response.data.questions)
       setLatestUpload(file.name)
       setSuccess(`Generated ${response.data.created_count} questions in ${response.data.llm_latency_ms}ms`)
       setActiveTab('questions')
+
+      // Refetch quiz metadata + attempts from backend so all tabs
+      // reflect the freshly-generated state instead of stale data.
+      await loadQuiz({ silent: true })
       await loadAttempts(1)
     } catch (requestError) {
       setError(requestError.response?.data?.detail || 'Failed to generate questions')
