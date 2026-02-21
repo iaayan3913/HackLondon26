@@ -1,2 +1,5 @@
 fastapi
 uvicorn
+aiosqlite
+aiofiles
+python-multipart

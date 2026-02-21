@@ -751,10 +751,11 @@
 
 /* Hub Container - Main bordered wrapper */
 .hub-container {
-  padding: 24px;
+  padding: 20px;
   background-color: #ffffff;
   border: 1px solid #E5E7EB;
   border-radius: 12px;
+  width: 100%;
 }
 
 /* Hub Header */
@@ -967,28 +968,32 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
 }
 
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 12px;
+  width: 100%;
 }
 
 .hub-item {
   background-color: #F9FAFB;
   border: 1px solid #E5E7EB;
-  border-radius: 10px;
-  padding: 16px;
-  transition: all 0.2s;
+  border-radius: 12px;
+  padding: 12px;
+  transition: all 0.15s;
   cursor: pointer;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .hub-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  border-color: #D1D5DB;
-  transform: translateY(-2px);
-  background-color: #ffffff;
+  border-color: #93C5FD;
+  background-color: #EFF6FF;
+  transform: translateY(-1px);
 }
 
 .hub-item-header {
@@ -1000,8 +1005,8 @@
 
 /* Folder Icon */
 .folder-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   background-color: #FEF3C7;
   border-radius: 8px;
   display: flex;
@@ -1010,15 +1015,15 @@
 }
 
 .folder-icon svg {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   color: #F59E0B;
 }
 
 /* File Icon */
 .file-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -1026,11 +1031,11 @@
 }
 
 .file-type-text {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   color: #ffffff;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .hub-item-menu {
@@ -1065,7 +1070,7 @@
 .hub-item-body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .hub-item-name {
@@ -1082,12 +1087,14 @@
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  color: #6B7280;
+  color: #9CA3AF;
+  margin-top: 2px;
 }
 
 .hub-item-date {
-  font-size: 11px;
+  font-size: 12px;
   color: #9CA3AF;
+  margin-top: 4px;
 }
 
 .file-badge {
@@ -1095,9 +1102,9 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 /* List View */
@@ -1418,18 +1425,7 @@
   color: #6B7280;
 }
 
-/* Responsive Hub Layout */
-@media (max-width: 1200px) {
-  .hub-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 900px) {
-  .hub-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+/* Responsive Hub Layout - moved to main .hub-grid definition above */
 
 @media (max-width: 768px) {
   .hub-section {
