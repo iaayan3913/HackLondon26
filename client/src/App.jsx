@@ -637,48 +637,8 @@ function App() {
                   </div>
                 )}
               </section>
-                  <div className="deck-card create-deck-card" onClick={() => setActiveNav('flashcards')}>
-                    <svg className="create-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    <div className="create-text">Create New Deck</div>
-                  </div>
-                  <div className="deck-card">
-                    <div className="deck-header">
-                      <span className="deck-badge badge-medicine">Medicine</span>
-                      <button className="deck-menu-button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg></button>
-                    </div>
-                    <h3 className="deck-title">Human Anatomy II</h3>
-                    <div className="deck-info"><span>128 cards</span><span className="deck-time">Last practiced 2h ago</span></div>
-                    <div className="progress-container">
-                      <div className="progress-bar"><div className="progress-fill progress-green" style={{ width: '65%' }}></div></div>
-                      <span className="progress-label">65%</span>
-                    </div>
-                  </div>
-                  <div className="deck-card">
-                    <div className="deck-header">
-                      <span className="deck-badge badge-biology">Biology</span>
-                      <button className="deck-menu-button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg></button>
-                    </div>
-                    <h3 className="deck-title">Microbiology Basic</h3>
-                    <div className="deck-info"><span>54 cards</span><span className="deck-time">Last practiced 5h ago</span></div>
-                    <div className="progress-container">
-                      <div className="progress-bar"><div className="progress-fill progress-blue" style={{ width: '30%' }}></div></div>
-                      <span className="progress-label">30%</span>
-                    </div>
-                  </div>
-                  <div className="deck-card">
-                    <div className="deck-header">
-                      <span className="deck-badge badge-chemistry">Chemistry</span>
-                      <button className="deck-menu-button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="12" cy="19" r="1.5" /></svg></button>
-                    </div>
-                    <h3 className="deck-title">Organic Compounds</h3>
-                    <div className="deck-info"><span>89 cards</span><span className="deck-time">Last practiced 1d ago</span></div>
-                    <div className="progress-container">
-                      <div className="progress-bar"><div className="progress-fill progress-green" style={{ width: '88%' }}></div></div>
-                      <span className="progress-label">88%</span>
-                    </div>
-                  </div>
+
+              {showUploadModal && (
                 <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
                   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                     <div className="modal-header">
