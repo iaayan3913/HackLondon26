@@ -1,9 +1,16 @@
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import './App.css'
 import Flashcards from './Flashcards'
 
+const ROOT_NAV_ITEMS = new Set(['dashboard', 'flashcards', 'transcription', 'focus'])
+
 function App() {
-  const [activeNav, setActiveNav] = useState('dashboard')
+  const navigate = useNavigate()
+  const location = useLocation()
+  const routeActiveNav = location.state?.activeNav
+  const initialActiveNav = typeof routeActiveNav === 'string' && ROOT_NAV_ITEMS.has(routeActiveNav) ? routeActiveNav : 'dashboard'
+  const [activeNav, setActiveNav] = useState(initialActiveNav)
   const [viewMode, setViewMode] = useState('grid')
   const [sortBy, setSortBy] = useState('name')
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -56,7 +63,10 @@ function App() {
             </svg>
             Flashcards
           </button>
-          <button className={`nav-item ${activeNav === 'quizzes' ? 'active' : ''}`} onClick={() => setActiveNav('quizzes')}>
+          <button
+            className={`nav-item ${activeNav === 'quizzes' ? 'active' : ''}`}
+            onClick={() => navigate('/quizzes')}
+          >
             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
