@@ -49,8 +49,7 @@ const SAMPLE_DECKS = [
 
 export default function Flashcards() {
   const [view, setView]           = useState('decks')
-  const [decks, setDecks]         = useState(SAMPLE_DECKS)
-  const [activeDeck, setActiveDeck] = useState(null)
+  const [decks]                   = useState(SAMPLE_DECKS)
 
   // generate state
   const [noteText, setNoteText]   = useState('')
@@ -118,7 +117,7 @@ export default function Flashcards() {
   }
 
   function startStudy(deckData) {
-    setActiveDeck(deckData)
+    void deckData
     setView('generate')
   }
 
@@ -139,7 +138,7 @@ export default function Flashcards() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [view, flipped, deck, cardIdx])
+  }, [view, flipped, deck, cardIdx, handleRate])
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
