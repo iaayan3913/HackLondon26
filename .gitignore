@@ -34,3 +34,5 @@ dist-ssr
 venv/
 .venv/
 env/
+keys/GOOGLE_APPLICATION_CREDENTIALS.json
+keys/
