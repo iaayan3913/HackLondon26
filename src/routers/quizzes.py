@@ -332,12 +332,24 @@ async def generate_questions_for_quiz(
 
     db.commit()
 
-    for question in persisted:
-        db.refresh(question)
+    # Verify questions are queryable before returning — prevents race
+    # conditions where the response arrives at the client before the DB
+    # write is fully visible (e.g. WAL-mode SQLite readers).
+    verified = db.scalars(
+        select(Question).where(Question.quiz_id == quiz_id).order_by(Question.id.asc())
+    ).all()
+
+    if len(verified) != len(persisted):
+        logger.warning(
+            "event=generation_verification_mismatch quiz_id=%s expected=%s actual=%s",
+            quiz_id,
+            len(persisted),
+            len(verified),
+        )
 
     return GenerateResponse(
-        created_count=len(persisted),
-        questions=[question_to_schema(question) for question in persisted],
+        created_count=len(verified),
+        questions=[question_to_schema(q) for q in verified],
         llm_latency_ms=llm_latency_ms,
     )
 
