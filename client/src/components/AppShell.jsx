@@ -64,18 +64,6 @@ const navItems = [
       </>
     ),
   },
-  {
-    id: 'focus',
-    label: 'Focus Zone',
-    path: '/',
-    state: { activeNav: 'focus' },
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </>
-    ),
-  },
 ]
 
 export default function AppShell({ activeNav, children }) {
@@ -132,9 +120,9 @@ export default function AppShell({ activeNav, children }) {
           <div className="navbar-actions">
             <div className="user-profile">
               <div className="user-info">
-                <div className="user-name">Alex Johnson</div>
+                <div className="user-name">Sir Al-Amin</div>
               </div>
-              <div className="user-avatar">AJ</div>
+              <div className="user-avatar">SA</div>
             </div>
           </div>
         </header>

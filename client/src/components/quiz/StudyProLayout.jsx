@@ -5,7 +5,6 @@ const navItems = [
   { label: 'Flashcards', to: '/', icon: 'style', state: { activeNav: 'flashcards' } },
   { label: 'Quizzes', to: '/quizzes', icon: 'quiz' },
   { label: 'Transcription', to: '/', icon: 'transcribe', state: { activeNav: 'transcription' } },
-  { label: 'Focus Zone', to: '/', icon: 'timer', state: { activeNav: 'focus' } },
 ]
 
 function Sidebar() {
@@ -68,7 +67,7 @@ function Topbar() {
       </div>
       <div className="ml-8 flex items-center gap-3">
         <div className="hidden text-right sm:block">
-          <p className="text-sm font-semibold leading-none">Test User</p>
+          <p className="text-sm font-semibold leading-none">Iyaaz Ahmed</p>
           <p className="mt-1 text-[10px] text-slate-500">Hackathon Profile</p>
         </div>
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">TU</div>

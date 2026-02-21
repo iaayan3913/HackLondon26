@@ -82,13 +82,6 @@ function App() {
             </svg>
             Transcription
           </button>
-          <button className={`nav-item ${activeNav === 'focus' ? 'active' : ''}`} onClick={() => setActiveNav('focus')}>
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            Focus Zone
-          </button>
         </nav>
       </aside>
 
@@ -105,9 +98,9 @@ function App() {
           <div className="navbar-actions">
             <div className="user-profile">
               <div className="user-info">
-                <div className="user-name">Alex Johnson</div>
+                <div className="user-name">Mahdi Rizzlicky</div>
               </div>
-              <div className="user-avatar">AJ</div>
+              <div className="user-avatar">MR</div>
             </div>
           </div>
         </header>
@@ -122,7 +115,7 @@ function App() {
 
             <div className="welcome-header">
               <div>
-                <h1 className="welcome-title">Welcome back, Alex! 👋</h1>
+                <h1 className="welcome-title">Welcome back, Mahdi! 👋</h1>
                 <p className="welcome-subtitle">
                   You've studied for <span className="highlight">4.5 hours</span> this week
                 </p>
@@ -440,12 +433,6 @@ function App() {
           {activeNav === 'transcription' && (
             <div style={{ padding: 40 }}>
               <h2 style={{ fontSize: 24, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Transcription</h2>
-              <p style={{ color: '#6B7280' }}>Coming soon.</p>
-            </div>
-          )}
-          {activeNav === 'focus' && (
-            <div style={{ padding: 40 }}>
-              <h2 style={{ fontSize: 24, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Focus Zone</h2>
               <p style={{ color: '#6B7280' }}>Coming soon.</p>
             </div>
           )}

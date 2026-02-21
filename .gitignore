@@ -34,3 +34,4 @@ dist-ssr
 venv/
 .venv/
 env/
+src/quiz_arena.db
