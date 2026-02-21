@@ -1,10 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List
 import random
+import json
+import uuid
+from anthropic import Anthropic
+
+client = Anthropic(api_key="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")
 
 app = FastAPI()
 
-# Configure CORS to allow communication from the Vite dev server
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], 
@@ -17,21 +23,243 @@ app.add_middleware(
 def test_api():
     return {"message": "My name is optimus prime. Leader of the autobots"}
 
-# 1. A list of colours to pick from.
-#    These are soft pastel hex codes so the text stays readable.
 COLOURS = [
-    "#fde8e8",  # soft red
-    "#fef3c7",  # soft yellow
-    "#d1fae5",  # soft green
-    "#dbeafe",  # soft blue
-    "#ede9fe",  # soft purple
-    "#fce7f3",  # soft pink
-    "#ffedd5",  # soft orange
+    "#fde8e8", "#fef3c7", "#d1fae5",
+    "#dbeafe", "#ede9fe", "#fce7f3", "#ffedd5",
 ]
 
-# 2. New endpoint — the frontend calls this when the button is clicked.
-#    It picks a random colour from the list and sends it back as JSON.
 @app.get("/api/colour")
 def get_colour():
-    chosen = random.choice(COLOURS)
-    return {"colour": chosen}
+    return {"colour": random.choice(COLOURS)}
+
+# ── Premade topic descriptions for Claude to generate cards from ──────────────
+PREMADE_TOPICS = {
+    "human anatomy ii": {
+        "subject": "Medicine",
+        "description": """
+        Human Anatomy II covering:
+        - The cardiovascular system: heart chambers, valves, major vessels (aorta, vena cava, pulmonary)
+        - The respiratory system: trachea, bronchi, alveoli, gas exchange
+        - The nervous system: CNS vs PNS, neurons, synaptic transmission, reflex arcs
+        - The musculoskeletal system: major bones, joints, muscle types, tendons vs ligaments
+        - The digestive system: organs, enzymes, absorption
+        - The endocrine system: key hormones and their glands (insulin, cortisol, adrenaline, thyroxine)
+        - The renal system: nephron structure, filtration, osmoregulation
+        Focus on precise anatomical terminology and functional relationships between structures.
+        """,
+    },
+    "microbiology basic": {
+        "subject": "Biology",
+        "description": """
+        Introductory Microbiology covering:
+        - Cell types: prokaryotes vs eukaryotes, key structural differences
+        - Bacterial structure: cell wall, flagella, pili, plasmids, capsule
+        - Bacterial reproduction: binary fission, conjugation, transformation, transduction
+        - Viruses: structure, lytic vs lysogenic cycles, viral replication
+        - Fungi: hyphae, spore formation, pathogenic fungi
+        - Microbial metabolism: aerobic vs anaerobic respiration, fermentation
+        - Host-pathogen interactions: infection, colonisation, virulence factors
+        - Antibiotics: mechanisms of action (cell wall inhibition, protein synthesis inhibition, etc.)
+        - Gram staining: principle, procedure, interpretation
+        """,
+    },
+    "organic compounds": {
+        "subject": "Chemistry",
+        "description": """
+        Organic Chemistry covering:
+        - Functional groups: alkanes, alkenes, alkynes, alcohols, aldehydes, ketones, carboxylic acids, amines, esters
+        - IUPAC nomenclature rules
+        - Reaction types: addition, substitution, elimination, condensation, hydrolysis
+        - Isomerism: structural isomers, stereoisomers, enantiomers, diastereomers
+        - Mechanisms: nucleophilic substitution (SN1 vs SN2), electrophilic addition
+        - Aromatic chemistry: benzene, electrophilic aromatic substitution
+        - Polymers: addition polymers, condensation polymers
+        - Organic analysis: mass spec, IR spectroscopy, NMR key concepts
+        """,
+    },
+    "calculus i": {
+        "subject": "Mathematics",
+        "description": """
+        Calculus I covering:
+        - Limits: definition, limit laws, one-sided limits, limits at infinity
+        - Continuity: definition, types of discontinuities
+        - Derivatives: definition from first principles, differentiation rules
+        - Rules: power rule, product rule, quotient rule, chain rule
+        - Derivatives of standard functions: sin, cos, tan, exp, ln
+        - Applications: tangent lines, increasing/decreasing functions, critical points
+        - Optimisation: finding local and global maxima/minima
+        - Integration: antiderivatives, definite vs indefinite integrals
+        - Fundamental Theorem of Calculus
+        - Integration techniques: substitution, integration by parts
+        """,
+    },
+}
+
+# ── Models ────────────────────────────────────────────────────────────────────
+class GenerateRequest(BaseModel):
+    note_text: str
+    max_cards: int = 12
+
+class GeneratePremadeRequest(BaseModel):
+    deck_title: str      # e.g. "Human Anatomy II"
+    max_cards: int = 15
+
+class RateRequest(BaseModel):
+    cards: List[dict]
+    card_id: str
+    rating: str
+
+class CheckAnswerRequest(BaseModel):
+    term: str
+    definition: str
+    user_answer: str
+
+# ── Generate from user notes ──────────────────────────────────────────────────
+@app.post("/flashcards/generate")
+def generate_flashcards(req: GenerateRequest):
+    prompt = f"""
+    You are an expert educational assistant. Extract key concepts from the following notes and create up to {req.max_cards} flashcards.
+    Each flashcard should have a 'term' and a 'definition'.
+    Return ONLY a JSON array of objects, where each object has 'term' and 'definition' string properties.
+    Do not include any markdown formatting like ```json or any other text.
+    
+    Notes:
+    {req.note_text}
+    """
+    try:
+        message = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        response_text = message.content[0].text.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]
+        cards_data = json.loads(response_text.strip())
+        flashcards = [
+            {"id": str(uuid.uuid4()), "term": c.get("term", ""), "definition": c.get("definition", "")}
+            for c in cards_data
+        ]
+        return {"flashcards": flashcards[:req.max_cards]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Generate premade deck cards ───────────────────────────────────────────────
+@app.post("/flashcards/generate-premade")
+def generate_premade(req: GeneratePremadeRequest):
+    """
+    Looks up the topic by deck title and asks Claude to generate
+    high-quality exam-style flashcards for that subject.
+    """
+    key = req.deck_title.lower().strip()
+    topic = PREMADE_TOPICS.get(key)
+
+    if topic is None:
+        # Fallback: generate generic cards for whatever topic name was given
+        topic_description = f"The subject of {req.deck_title} at university level."
+    else:
+        topic_description = topic["description"]
+
+    prompt = f"""
+You are an expert university tutor creating high-quality exam flashcards.
+
+Topic: {req.deck_title}
+Curriculum content:
+{topic_description}
+
+Create exactly {req.max_cards} flashcards for this topic.
+
+Requirements:
+- Cover a broad range of concepts across the whole topic
+- Each 'term' should be a specific concept, process, structure, or definition (2-6 words)
+- Each 'definition' should be a clear, precise, student-friendly explanation (1-3 sentences)
+- Include a mix of: key definitions, mechanisms/processes, comparisons, and clinical/applied facts
+- Do NOT repeat similar cards
+
+Return ONLY a valid JSON array. No markdown, no prose, no code fences.
+Each object must have exactly two keys: "term" and "definition".
+
+Example format:
+[{{"term": "Mitosis", "definition": "Cell division producing two genetically identical daughter cells. Occurs in 4 stages: prophase, metaphase, anaphase, telophase."}}]
+"""
+
+    try:
+        message = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=3000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        response_text = message.content[0].text.strip()
+
+        # Clean up any accidental markdown fences
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]
+        elif response_text.startswith("```"):
+            response_text = response_text[3:]
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]
+
+        cards_data = json.loads(response_text.strip())
+
+        flashcards = [
+            {"id": str(uuid.uuid4()), "term": c.get("term", ""), "definition": c.get("definition", "")}
+            for c in cards_data
+        ]
+        return {
+            "flashcards": flashcards[:req.max_cards],
+            "subject": topic["subject"] if topic else req.deck_title,
+        }
+
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=502, detail="AI returned malformed JSON. Please try again.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Rate a card ───────────────────────────────────────────────────────────────
+@app.post("/flashcards/rate")
+def rate_flashcard(req: RateRequest):
+    updated_cards = []
+    for card in req.cards:
+        if card.get("id") == req.card_id:
+            if req.rating == "easy":
+                continue
+            else:
+                updated_cards.append(card)
+        else:
+            updated_cards.append(card)
+    return {"cards": updated_cards, "session_complete": len(updated_cards) == 0}
+
+
+# ── Check a user's written answer ─────────────────────────────────────────────
+@app.post("/flashcards/check")
+def check_answer(req: CheckAnswerRequest):
+    prompt = f"""
+    You are an expert tutor. A student is studying flashcards.
+    Term: {req.term}
+    Actual Definition: {req.definition}
+    Student's Answer: {req.user_answer}
+
+    Evaluate the student's answer. Be encouraging. Keep it brief (1-3 sentences).
+    Return ONLY a JSON object with two keys:
+    - "correct": boolean (true if the student's answer captures the core meaning)
+    - "feedback": string (your brief feedback)
+    Do not include any markdown formatting.
+    """
+    try:
+        message = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=700,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        response_text = message.content[0].text.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]
+        return json.loads(response_text.strip())
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
