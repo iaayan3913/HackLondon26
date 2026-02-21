@@ -334,80 +334,61 @@ export default function Flashcards() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-            {/* Left side: Flashcard */}
-            <div style={{ flex: 1 }}>
-              <div style={s.cardScene} onClick={() => setFlipped(f => !f)}>
-                <div style={{ ...s.cardInner, transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
-                  <div style={s.cardFront}>
-                    <span style={s.cardFaceLabel}>TERM</span>
-                    <p style={s.cardTerm}>{deck[cardIdx%deck.length]?.term}</p>
-                    <div style={{ marginTop:24, width:'100%' }} onClick={e => e.stopPropagation()}>
-                      <textarea
-                        style={{ ...s.textarea, minHeight:80, fontSize:15 }}
-                        placeholder="Type your answer here..."
-                        value={userAnswer}
-                        onChange={e => setUserAnswer(e.target.value)}
-                      />
-                      <button
-                        style={{ ...s.btnPrimary, width:'100%', marginTop:12, justifyContent:'center' }}
-                        onClick={handleCheckAnswer}
-                        disabled={isChecking || !userAnswer.trim()}
-                      >
-                        {isChecking
-                          ? <span style={{ display:'flex', alignItems:'center', gap:8 }}><Spinner /> Checking...</span>
-                          : 'Check Answer'}
-                      </button>
-                    </div>
-                    <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
-                    <span style={s.cardHint}>Or click anywhere to reveal definition</span>
-                  </div>
-
-                  <div style={s.cardBack}>
-                    <span style={s.cardFaceLabel}>DEFINITION</span>
-                    <p style={s.cardDefinition}>{deck[cardIdx%deck.length]?.definition}</p>
-                    {feedback && (
-                      <div style={{ marginTop:20, padding:16, borderRadius:8, background:feedback.correct?C.greenBg:C.redBg, border:`1px solid ${feedback.correct?'#bbf7d0':'#fecaca'}`, width:'100%', textAlign:'left' }}>
-                        <p style={{ fontWeight:600, color:feedback.correct?C.green:C.red, marginBottom:4, fontSize:14 }}>
-                          {feedback.correct ? '✅ Good job!' : '❌ Not quite'}
-                        </p>
-                        <p style={{ fontSize:14, color:C.text, lineHeight:1.5 }}>{feedback.feedback}</p>
-                      </div>
-                    )}
-                    <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
-                    <span style={s.cardHint}>Rate yourself below</span>
-                  </div>
+          <div style={s.cardScene} onClick={() => setFlipped(f => !f)}>
+            <div style={{ ...s.cardInner, transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
+              <div style={s.cardFront}>
+                <span style={s.cardFaceLabel}>TERM</span>
+                <p style={s.cardTerm}>{deck[cardIdx%deck.length]?.term}</p>
+                <div style={{ marginTop:24, width:'100%' }} onClick={e => e.stopPropagation()}>
+                  <textarea
+                    style={{ ...s.textarea, minHeight:80, fontSize:15 }}
+                    placeholder="Type your answer here..."
+                    value={userAnswer}
+                    onChange={e => setUserAnswer(e.target.value)}
+                  />
+                  <button
+                    style={{ ...s.btnPrimary, width:'100%', marginTop:12, justifyContent:'center' }}
+                    onClick={handleCheckAnswer}
+                    disabled={isChecking || !userAnswer.trim()}
+                  >
+                    {isChecking
+                      ? <span style={{ display:'flex', alignItems:'center', gap:8 }}><Spinner /> Checking...</span>
+                      : 'Check Answer'}
+                  </button>
                 </div>
+                <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
+                <span style={s.cardHint}>Or click anywhere to reveal definition</span>
               </div>
 
-              <div style={s.ratingRow}>
-                <button style={s.btnMissed} onClick={() => handleRate('missed')}>✗ Missed</button>
-                <button style={s.btnHard}   onClick={() => handleRate('hard')}>〜 Hard</button>
-                <button style={s.btnEasy}   onClick={() => handleRate('easy')}>✓ Easy</button>
-              </div>
-              {error && <p style={{ ...s.errorText, textAlign:'center', marginTop:8 }}>{error}</p>}
-              <p style={{ textAlign:'center', color:C.muted, fontSize:12, marginTop:8 }}>
-                Keyboard: <kbd style={s.kbd}>Space</kbd> flip &nbsp;
-                <kbd style={s.kbd}>1</kbd> missed &nbsp;
-                <kbd style={s.kbd}>2</kbd> hard &nbsp;
-                <kbd style={s.kbd}>3</kbd> easy
-              </p>
-            </div>
-
-            {/* Right side: Instructions */}
-            <div style={{ width: 300, flexShrink: 0 }}>
-              <div style={{ ...s.card, background: C.primaryBg, border: `1px solid #C7D2FE` }}>
-                <p style={{ fontSize: 14, fontWeight: 600, color: C.primary, marginBottom: 12 }}>📌 How to Study</p>
-                <ul style={{ margin: 0, paddingLeft: 20, color: '#4338CA', fontSize: 13, lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <li>Type your answer and click <strong>Check Answer</strong> to get AI feedback.</li>
-                  <li>Rate how well you knew the answer using the buttons below.</li>
-                  <li>Cards marked as <strong>Missed</strong> or <strong>Hard</strong> will stay in the deck and reappear later.</li>
-                  <li>Cards marked as <strong>Easy</strong> are removed from the current session.</li>
-                  <li>Keep studying until you've marked every card as Easy!</li>
-                </ul>
+              <div style={s.cardBack}>
+                <span style={s.cardFaceLabel}>DEFINITION</span>
+                <p style={s.cardDefinition}>{deck[cardIdx%deck.length]?.definition}</p>
+                {feedback && (
+                  <div style={{ marginTop:20, padding:16, borderRadius:8, background:feedback.correct?C.greenBg:C.redBg, border:`1px solid ${feedback.correct?'#bbf7d0':'#fecaca'}`, width:'100%', textAlign:'left' }}>
+                    <p style={{ fontWeight:600, color:feedback.correct?C.green:C.red, marginBottom:4, fontSize:14 }}>
+                      {feedback.correct ? '✅ Good job!' : '❌ Not quite'}
+                    </p>
+                    <p style={{ fontSize:14, color:C.text, lineHeight:1.5 }}>{feedback.feedback}</p>
+                  </div>
+                )}
+                <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
+                <span style={s.cardHint}>Rate yourself below</span>
               </div>
             </div>
           </div>
+
+          <div style={s.ratingRow}>
+            <button style={s.btnMissed} onClick={() => handleRate('missed')}>✗ Missed</button>
+            <button style={s.btnHard}   onClick={() => handleRate('hard')}>〜 Hard</button>
+            <button style={s.btnEasy}   onClick={() => handleRate('easy')}>✓ Easy</button>
+          </div>
+          {error && <p style={{ ...s.errorText, textAlign:'center', marginTop:8 }}>{error}</p>}
+          <p style={{ textAlign:'center', color:C.muted, fontSize:12, marginTop:8 }}>
+            Keyboard: <kbd style={s.kbd}>Space</kbd> flip &nbsp;
+            <kbd style={s.kbd}>1</kbd> missed &nbsp;
+            <kbd style={s.kbd}>2</kbd> hard &nbsp;
+            <kbd style={s.kbd}>3</kbd> easy
+          </p>
         </div>
       )}
 
