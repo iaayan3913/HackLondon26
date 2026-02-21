@@ -1,6 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  --primary-blue: #2563EB;
+  --success-green: #10B981;
+  --danger-red: #EF4444;
+  --text-dark: #1F2937;
+  --text-gray: #6B7280;
+  --bg-gray: #F9FAFB;
+  --border-gray: #E5E7EB;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: var(--text-dark);
   font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 @keyframes spin {
