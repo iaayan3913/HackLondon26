@@ -11,9 +11,6 @@ import uuid
 import os
 from anthropic import Anthropic
 
-
-client = Anthropic(api_key="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")
-
 try:
     from .config import settings
     from .database import ensure_test_user
@@ -31,6 +28,7 @@ except ImportError:  # pragma: no cover - allows `uvicorn main:app` from src/
     from routers.transcription import router as transcription_router
     from services.extract import extract_text, ephemeral_upload, validate_upload_file
 
+client = Anthropic(api_key=settings.claude_api_key)
 
 logging.basicConfig(
     level=logging.INFO,
