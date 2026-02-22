@@ -11,7 +11,7 @@ import uuid
 from anthropic import Anthropic
 
 
-client = Anthropic(api_key="INSERT API HERE")
+
 
 try:
     from .config import settings
@@ -26,6 +26,7 @@ except ImportError:  # pragma: no cover - allows `uvicorn main:app` from src/
     from routers.attempts import router as attempts_router
     from routers.quizzes import router as quizzes_router
 
+client = Anthropic(api_key=settings.claude_api_key)
 
 logging.basicConfig(
     level=logging.INFO,
