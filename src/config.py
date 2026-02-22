@@ -14,6 +14,8 @@ load_dotenv()
 class Settings:
     gemini_api_key: str
     gemini_model: str
+    claude_api_key: str
+    claude_model: str
     db_path: Path
     cors_origins: tuple[str, ...]
 
@@ -38,6 +40,8 @@ def _parse_cors_origins(raw: str) -> tuple[str, ...]:
 settings = Settings(
     gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
     gemini_model=os.getenv("GEMINI_MODEL", "gemini-3-flash-preview"),
+    claude_api_key=os.getenv("CLAUDE_API_KEY", ""),
+    claude_model=os.getenv("CLAUDE_MODEL", "claude-3-haiku-20240307"),
     db_path=_resolve_db_path(os.getenv("DB_PATH", "quiz_arena.db")),
     cors_origins=_parse_cors_origins(os.getenv("CORS_ORIGINS", "")),
 )
