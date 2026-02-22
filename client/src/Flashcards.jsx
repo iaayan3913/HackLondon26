@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
 const styleTag = document.createElement('style')
@@ -36,8 +36,10 @@ export default function Flashcards() {
 
   // generate state
   const [noteText, setNoteText]       = useState('')
+  const [file, setFile]               = useState(null)
   const [maxCards, setMaxCards]       = useState(12)
   const [loading, setLoading]         = useState(false)
+  const fileInputRef                  = useRef(null)
   const [generatingPremade, setGeneratingPremade] = useState(false)
   const [error, setError]             = useState('')
 
@@ -85,14 +87,26 @@ export default function Flashcards() {
   }
 
   async function handleGenerate() {
-    if (!noteText.trim()) { setError('Please paste some notes first.'); return }
+    if (!noteText.trim() && !file) { setError('Please paste some notes or upload a file first.'); return }
     setError('')
     setLoading(true)
     try {
-      const res = await axios.post('http://localhost:8000/flashcards/generate', {
-        note_text: noteText,
-        max_cards: maxCards,
-      })
+      let res
+      if (file) {
+        const formData = new FormData()
+        if (noteText) formData.append('note_text', noteText)
+        formData.append('file', file)
+        formData.append('max_cards', maxCards)
+        res = await axios.post('http://localhost:8000/flashcards/generate-upload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+      } else {
+        res = await axios.post('http://localhost:8000/flashcards/generate', {
+          note_text: noteText,
+          max_cards: maxCards,
+        })
+      }
+
       const cards = res.data.flashcards
       setDeck(cards)
       setTotalCards(cards.length)
@@ -166,6 +180,7 @@ export default function Flashcards() {
     setNoteText('')
     setError('')
     setActiveDeck(null)
+    setFile(null)
   }
 
   useEffect(() => {
@@ -265,6 +280,31 @@ export default function Flashcards() {
                 value={noteText}
                 onChange={e => setNoteText(e.target.value)}
               />
+
+              <div style={{ marginTop: 16, padding: 16, border: `1px dashed ${C.primary}`, borderRadius: 10, background: C.primaryBg }}>
+                <label style={{ ...s.label, color: C.primary, marginBottom: 8 }}>Or Upload Slides (PDF/TXT/MD)</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.txt,.md"
+                    onChange={e => setFile(e.target.files[0] || null)}
+                    style={{ fontSize: 13, color: C.text }}
+                  />
+                  {file && (
+                    <button
+                      onClick={() => { setFile(null); if (fileInputRef.current) fileInputRef.current.value = '' }}
+                      style={{ border: 'none', background: 'none', color: C.red, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p style={{ fontSize: 12, color: C.muted, marginTop: 6, lineHeight: 1.4 }}>
+                  The AI will analyse your file content along with any notes above.
+                </p>
+              </div>
+
               <div style={s.generateFooter}>
                 <div style={s.maxCardsRow}>
                   <label style={s.label}>Max cards:</label>
@@ -334,61 +374,75 @@ export default function Flashcards() {
             </div>
           </div>
 
-          <div style={s.cardScene} onClick={() => setFlipped(f => !f)}>
-            <div style={{ ...s.cardInner, transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
-              <div style={s.cardFront}>
-                <span style={s.cardFaceLabel}>TERM</span>
-                <p style={s.cardTerm}>{deck[cardIdx%deck.length]?.term}</p>
-                <div style={{ marginTop:24, width:'100%' }} onClick={e => e.stopPropagation()}>
-                  <textarea
-                    style={{ ...s.textarea, minHeight:80, fontSize:15 }}
-                    placeholder="Type your answer here..."
-                    value={userAnswer}
-                    onChange={e => setUserAnswer(e.target.value)}
-                  />
-                  <button
-                    style={{ ...s.btnPrimary, width:'100%', marginTop:12, justifyContent:'center' }}
-                    onClick={handleCheckAnswer}
-                    disabled={isChecking || !userAnswer.trim()}
-                  >
-                    {isChecking
-                      ? <span style={{ display:'flex', alignItems:'center', gap:8 }}><Spinner /> Checking...</span>
-                      : 'Check Answer'}
-                  </button>
+          <div style={s.studyWrap}>
+            <div style={{ width: '100%' }}>
+              <div style={{ ...s.cardScene, margin: '0 auto 24px' }} onClick={() => setFlipped(f => !f)}>
+                <div style={{ ...s.cardInner, transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
+                  <div style={s.cardFront}>
+                    <span style={s.cardFaceLabel}>TERM</span>
+                    <p style={s.cardTerm}>{deck[cardIdx%deck.length]?.term}</p>
+                    <div style={{ marginTop:24, width:'100%' }} onClick={e => e.stopPropagation()}>
+                      <textarea
+                        style={{ ...s.textarea, minHeight:80, fontSize:15 }}
+                        placeholder="Type your answer here..."
+                        value={userAnswer}
+                        onChange={e => setUserAnswer(e.target.value)}
+                      />
+                      <button
+                        style={{ ...s.btnPrimary, width:'100%', marginTop:12, justifyContent:'center' }}
+                        onClick={handleCheckAnswer}
+                        disabled={isChecking || !userAnswer.trim()}
+                      >
+                        {isChecking
+                          ? <span style={{ display:'flex', alignItems:'center', gap:8 }}><Spinner /> Checking...</span>
+                          : 'Check Answer'}
+                      </button>
+                    </div>
+                    <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
+                    <span style={s.cardHint}>Or click anywhere to reveal definition</span>
+                  </div>
+
+                  <div style={s.cardBack}>
+                    <span style={s.cardFaceLabel}>DEFINITION</span>
+                    <p style={s.cardDefinition}>{deck[cardIdx%deck.length]?.definition}</p>
+                    {feedback && (
+                      <div style={{ marginTop:20, padding:16, borderRadius:8, background:feedback.correct?C.greenBg:C.redBg, border:`1px solid ${feedback.correct?'#bbf7d0':'#fecaca'}`, width:'100%', textAlign:'left' }}>
+                        <p style={{ fontWeight:600, color:feedback.correct?C.green:C.red, marginBottom:4, fontSize:14 }}>
+                          {feedback.correct ? '✅ Good job!' : '❌ Not quite'}
+                        </p>
+                        <p style={{ fontSize:14, color:C.text, lineHeight:1.5 }}>{feedback.feedback}</p>
+                      </div>
+                    )}
+                    <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
+                    <span style={s.cardHint}>Rate yourself below</span>
+                  </div>
                 </div>
-                <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
-                <span style={s.cardHint}>Or click anywhere to reveal definition</span>
               </div>
 
-              <div style={s.cardBack}>
-                <span style={s.cardFaceLabel}>DEFINITION</span>
-                <p style={s.cardDefinition}>{deck[cardIdx%deck.length]?.definition}</p>
-                {feedback && (
-                  <div style={{ marginTop:20, padding:16, borderRadius:8, background:feedback.correct?C.greenBg:C.redBg, border:`1px solid ${feedback.correct?'#bbf7d0':'#fecaca'}`, width:'100%', textAlign:'left' }}>
-                    <p style={{ fontWeight:600, color:feedback.correct?C.green:C.red, marginBottom:4, fontSize:14 }}>
-                      {feedback.correct ? '✅ Good job!' : '❌ Not quite'}
-                    </p>
-                    <p style={{ fontSize:14, color:C.text, lineHeight:1.5 }}>{feedback.feedback}</p>
-                  </div>
-                )}
-                <div style={s.cardCounter}>{(cardIdx%deck.length)+1} / {deck.length}</div>
-                <span style={s.cardHint}>Rate yourself below</span>
+              <div style={s.ratingRow}>
+                <button style={s.btnMissed} onClick={() => handleRate('missed')}>✗ Missed</button>
+                <button style={s.btnHard}   onClick={() => handleRate('hard')}>〜 Hard</button>
+                <button style={s.btnEasy}   onClick={() => handleRate('easy')}>✓ Easy</button>
               </div>
+              {error && <p style={{ ...s.errorText, textAlign:'center', marginTop:8 }}>{error}</p>}
+              <p style={{ textAlign:'center', color:C.muted, fontSize:12, marginTop:8 }}>
+                Keyboard: <kbd style={s.kbd}>Space</kbd> flip &nbsp;
+                <kbd style={s.kbd}>1</kbd> missed &nbsp;
+                <kbd style={s.kbd}>2</kbd> hard &nbsp;
+                <kbd style={s.kbd}>3</kbd> easy
+              </p>
+            </div>
+            
+            <div style={s.infoBox}>
+              <p style={{ fontSize:14, fontWeight:600, color:C.blue, marginBottom:8 }}>ℹ️ How it works</p>
+              <p style={{ fontSize:13, color:'#4338CA', lineHeight:1.5 }}>
+                Questions will repeat until you rate them as "Easy".
+              </p>
+              <p style={{ fontSize:13, color:'#4338CA', lineHeight:1.5, marginTop:8 }}>
+                This is spaced repetition—it ensures you master the hard concepts!
+              </p>
             </div>
           </div>
-
-          <div style={s.ratingRow}>
-            <button style={s.btnMissed} onClick={() => handleRate('missed')}>✗ Missed</button>
-            <button style={s.btnHard}   onClick={() => handleRate('hard')}>〜 Hard</button>
-            <button style={s.btnEasy}   onClick={() => handleRate('easy')}>✓ Easy</button>
-          </div>
-          {error && <p style={{ ...s.errorText, textAlign:'center', marginTop:8 }}>{error}</p>}
-          <p style={{ textAlign:'center', color:C.muted, fontSize:12, marginTop:8 }}>
-            Keyboard: <kbd style={s.kbd}>Space</kbd> flip &nbsp;
-            <kbd style={s.kbd}>1</kbd> missed &nbsp;
-            <kbd style={s.kbd}>2</kbd> hard &nbsp;
-            <kbd style={s.kbd}>3</kbd> easy
-          </p>
         </div>
       )}
 
@@ -500,6 +554,8 @@ const s = {
   numInput:     { width:64, border:`1px solid ${C.border}`, borderRadius:8, padding:'6px 10px', fontSize:13, outline:'none', background:C.bg, color:C.text },
   tipRow:       { display:'flex', alignItems:'flex-start', gap:8, marginBottom:8 },
   tipDot:       { width:5, height:5, borderRadius:'50%', background:C.primary, flexShrink:0, marginTop:7 },
+  studyWrap:    { display:'grid', gridTemplateColumns:'1fr 260px', gap:32, alignItems:'start', maxWidth:900, margin:'0 auto' },
+  infoBox:      { background:C.blueBg, border:`1px solid ${C.blue}`, borderRadius:14, padding:20 },
   progressWrap: { marginBottom:24 },
   progressMeta: { display:'flex', justifyContent:'space-between', marginBottom:6 },
   progressTrack: { height:6, background:C.border, borderRadius:999, overflow:'hidden' },

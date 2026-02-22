@@ -39,6 +39,12 @@ class GradeEnvelope(BaseModel):
     feedback: str
 
 
+class VideoSummaryResponse(BaseModel):
+    summary: str
+    key_points: list[str]
+    questions: list[GeneratedQuestion]
+
+
 def _strip_markdown_fences(text: str) -> str:
     content = text.strip()
     fence_match = re.search(r"```(?:json)?\s*(.*?)```", content, re.IGNORECASE | re.DOTALL)
@@ -162,6 +168,37 @@ class GeminiService:
 
         score = min(1.0, max(0.0, float(grade.score)))
         return score, grade.feedback.strip(), "gemini"
+
+    def summarize_video(self, transcript_text: str) -> VideoSummaryResponse:
+        if not self.api_key:
+             # Fallback is not implemented for summary yet, just return dummy data
+             return VideoSummaryResponse(
+                 summary="This is a fallback summary.",
+                 key_points=["Point 1", "Point 2"],
+                 questions=[]
+             )
+
+        schema = VideoSummaryResponse
+        prompt = (
+            "You are an expert tutor. Summarize the following video transcript. "
+            "Return JSON only. No markdown. "
+            "Includes a 'summary' paragraph, a list of 'key_points', and 5 'questions' (mixed MCQ and open) based on the content.\n"
+            "For MCQ questions, provide 'options' and 'correct_option'.\n"
+            "Here is the transcript:\n"
+            "<TRANSCRIPT>\n"
+            f"{transcript_text[:30000]}\n"  # Limit transcript length to avoid token limits
+            "</TRANSCRIPT>"
+        )
+        
+        raw_text = self._call_gemini(prompt=prompt, schema=schema)
+        try:
+            response = VideoSummaryResponse.model_validate(_safe_json_loads(raw_text))
+            # Post-process questions to ensure they have correct structure
+            processed_questions = self._post_process_generated_questions(response.questions)
+            response.questions = processed_questions
+            return response
+        except (ValidationError, json.JSONDecodeError) as error:
+             raise GeminiResponseError("Failed to parse Gemini summary response") from error
 
     def _call_gemini(self, *, prompt: str, schema: Any) -> str:
         try:
