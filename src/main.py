@@ -1,17 +1,18 @@
 from __future__ import annotations
 import logging
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import random
 import json
 import uuid
+import os
 from anthropic import Anthropic
 
 
-client = Anthropic(api_key="INSERT API HERE")
+client = Anthropic(api_key="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")
 
 try:
     from .config import settings
@@ -19,12 +20,14 @@ try:
     from .database import init_db
     from .routers.attempts import router as attempts_router
     from .routers.quizzes import router as quizzes_router
+    from .services.extract import extract_text, ephemeral_upload, validate_upload_file
 except ImportError:  # pragma: no cover - allows `uvicorn main:app` from src/
     from config import settings
     from database import ensure_test_user
     from database import init_db
     from routers.attempts import router as attempts_router
     from routers.quizzes import router as quizzes_router
+    from services.extract import extract_text, ephemeral_upload, validate_upload_file
 
 
 logging.basicConfig(
@@ -150,7 +153,7 @@ def generate_flashcards(req: GenerateRequest):
     """
     try:
         message = client.messages.create(
-            model="claude-3-haiku-20240307",
+            model="claude-haiku-4-5-20251001",
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -165,6 +168,58 @@ def generate_flashcards(req: GenerateRequest):
             for c in cards_data
         ]
         return {"flashcards": flashcards[:req.max_cards]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/flashcards/generate-upload")
+async def generate_flashcards_upload(
+    file: Optional[UploadFile] = File(None),
+    note_text: Optional[str] = Form(None),
+    max_cards: int = Form(12)
+):
+    text_content = ""
+    if note_text:
+        text_content += note_text + "\n\n"
+        
+    if file:
+        try:
+            suffix = validate_upload_file(file)
+            async with ephemeral_upload(file, suffix) as temp_path:
+                extracted_text, _ = extract_text(temp_path, suffix)
+                text_content += extracted_text
+        except Exception as e:
+             raise HTTPException(status_code=400, detail=str(e))
+
+    if not text_content.strip():
+        raise HTTPException(status_code=400, detail="No content provided for flashcard generation. Please add notes or upload a file.")
+
+    prompt = f"""
+    You are an expert educational assistant. Extract key concepts from the following notes and create up to {max_cards} flashcards.
+    Each flashcard should have a 'term' and a 'definition'.
+    Return ONLY a JSON array of objects, where each object has 'term' and 'definition' string properties.
+    Do not include any markdown formatting like ```json or any other text.
+    
+    Notes:
+    {text_content}
+    """
+    try:
+        message = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        response_text = message.content[0].text.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]
+        cards_data = json.loads(response_text.strip())
+        flashcards = [
+            {"id": str(uuid.uuid4()), "term": c.get("term", ""), "definition": c.get("definition", "")}
+            for c in cards_data
+        ]
+        return {"flashcards": flashcards[:max_cards]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -210,7 +265,7 @@ Example format:
 
     try:
         message = client.messages.create(
-            model="claude-3-haiku-20240307",
+            model="claude-haiku-4-5-20251001",
             max_tokens=3000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -273,7 +328,7 @@ def check_answer(req: CheckAnswerRequest):
     """
     try:
         message = client.messages.create(
-            model="claude-3-haiku-20240307",
+            model="claude-haiku-4-5-20251001",
             max_tokens=700,
             messages=[{"role": "user", "content": prompt}]
         )
