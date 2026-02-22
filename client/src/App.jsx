@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './App.css'
 import Flashcards from './Flashcards'
+import Transcription from './Transcription'
 
 const ROOT_NAV_ITEMS = new Set(['dashboard', 'flashcards', 'transcription', 'focus'])
 
@@ -431,10 +432,7 @@ function App() {
             </div>
           )}
           {activeNav === 'transcription' && (
-            <div style={{ padding: 40 }}>
-              <h2 style={{ fontSize: 24, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Transcription</h2>
-              <p style={{ color: '#6B7280' }}>Coming soon.</p>
-            </div>
+             <Transcription />
           )}
 
         </main>

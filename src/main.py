@@ -20,13 +20,15 @@ try:
     from .database import init_db
     from .routers.attempts import router as attempts_router
     from .routers.quizzes import router as quizzes_router
-    from .services.extract import extract_text, ephemeral_upload, validate_upload_file
+    from routers.transcription import router as transcription_router
+    from services.extract import extract_text, ephemeral_upload, validate_upload_file
 except ImportError:  # pragma: no cover - allows `uvicorn main:app` from src/
     from config import settings
     from database import ensure_test_user
     from database import init_db
     from routers.attempts import router as attempts_router
     from routers.quizzes import router as quizzes_router
+    from routers.transcription import router as transcription_router
     from services.extract import extract_text, ephemeral_upload, validate_upload_file
 
 
@@ -47,6 +49,7 @@ app.add_middleware(
 
 app.include_router(quizzes_router)
 app.include_router(attempts_router)
+app.include_router(transcription_router)
 
 COLOURS = [
     "#fde8e8", "#fef3c7", "#d1fae5",

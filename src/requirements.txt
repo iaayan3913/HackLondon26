@@ -10,3 +10,4 @@ markdown
 beautifulsoup4
 pytest
 httpx
+youtube-transcript-api
